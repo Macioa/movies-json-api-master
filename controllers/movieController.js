@@ -1,12 +1,8 @@
 const express = require('express');
-// Next we set up the Router
 const router = express.Router();
-// require Our Model - Remember Model is
-// a representation of our data
-// The model should capitalized
+
 const Movie = require('../models/movie');
-// Creating the index route
-// index route should show all the fruits
+
  router.get('/', async (req, res, next) => {
 
      try  {
@@ -25,13 +21,10 @@ const Movie = require('../models/movie');
     }
 });
 
-// This is the route that the form is sending
-// its info too
-// aka the create route
 router.post('/', async (req, res) => {
-  // contents of the form will be in req.body
+
   try {
-    console.log(req.body, ' this is req.body');
+    console.log(req.body, '= req.body');
     const createdMovie = await Movie.create(req.body);
 
     res.json({

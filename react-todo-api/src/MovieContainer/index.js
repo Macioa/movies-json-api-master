@@ -41,8 +41,8 @@ class MovieContainer extends Component{
     createMovieList=()=>{
         let movielist=this.state.movies.map((movie,i)=>
             <li key='movie._id'>
-                <EditableInput name='title' id={movie._id} value={movie.title} style={{fontSize:'16px'}}/>-
-                <EditableInput name='description' id={movie._id} value={movie.description}/>
+                <EditableInput name='title' index={i} id={movie._id} value={movie.title} style={{fontSize:'16px'}}/>-
+                <EditableInput name='description' index={i} id={movie._id} value={movie.description}/>
                 <button id={movie._id} onClick={this.deleteMovie}>X</button>
             </li>
         )
