@@ -41,7 +41,6 @@ class MovieContainer extends Component{
     }
 
     updateMovie=async (movie)=>{
-        console.log('Updating: ',movie)
         try{
             const response = await fetch(`http://localhost:9000/api/v1/movies/${movie._id}`, {
                 method: 'PUT',
@@ -57,7 +56,6 @@ class MovieContainer extends Component{
         if (this.state.editMovie.id&&this.state.editMovie.name){
             let selectedmovie=this.state.movies.find(movie=>movie._id===this.state.editMovie.id);
             selectedmovie[this.state.name]=this.state.editMovie.t.value;
-            console.log(e.target.value)
             this.updateMovie(selectedmovie)
         }
         this.setState({editMovie:{id:e.target.id, name:e.target.name, t:e.target}})
@@ -86,7 +84,7 @@ class MovieContainer extends Component{
         return(
             <div>
                 <CreateMovie lift={this.createMovie}/>
-                <button onClick={this.logState}>STATE</button>
+ 
                 <Movies movies={this.createMovieList()}/>
             </div>
         )
