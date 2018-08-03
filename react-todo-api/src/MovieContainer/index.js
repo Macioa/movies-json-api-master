@@ -35,10 +35,13 @@ class MovieContainer extends Component{
             deletedmovie.then(this.getMovies().then(response=>this.setState({movies:response.data})))
         } catch (err) {console.error('Error deleting movie:',err)}     
     }
+
     componentDidMount(){
         this.getMovies().then(response=>this.setState({movies:response.data})).catch(err=>console.error(err));
     }
+
     toggleEdit=(e)=>{this.setState({editMovie:{id:e.target.id, name:e.target.name}})}
+    
     createMovieList=()=>{
         let movielist=this.state.movies.map((movie,i)=>
             <li key='movie._id'>
