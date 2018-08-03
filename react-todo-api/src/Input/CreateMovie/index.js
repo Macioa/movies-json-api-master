@@ -7,8 +7,6 @@ class CreateMovie extends Component{
     }
     handleSubmit=(e)=>{
         e.preventDefault();
-        console.log(e.target)
-        console.log(`attempting to create ${e.target.title.value}`)
         this.lift({title: e.target.title.value, description: e.target.description.value})}
     render(){return(
             <form onSubmit={this.handleSubmit}>

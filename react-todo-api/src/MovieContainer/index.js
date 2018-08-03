@@ -7,7 +7,7 @@ import { create } from 'domain';
 class MovieContainer extends Component{
     constructor(props){
         super(props)
-        this.state={movies:[], editMovie:{id:null,name:null}}
+        this.state={movies:[], editMovie:{id:null,name:null,i:null}, lastMovieId:null}
     }
 
     getMovies=async ()=>{
@@ -40,22 +40,51 @@ class MovieContainer extends Component{
         this.getMovies().then(response=>this.setState({movies:response.data})).catch(err=>console.error(err));
     }
 
-    toggleEdit=(e)=>{this.setState({editMovie:{id:e.target.id, name:e.target.name}})}
-    
+    updateMovie=async (movie)=>{
+        try{
+            const response = await fetch(`http://localhost:9000/api/v1/movies/${movie._id}`, {
+                method: 'PUT',
+                body: JSON.stringify(movie),
+                headers: {'content-type': 'application/json'}
+            })
+            const updatedmovie = await response.json();
+            try { updatedmovie.then(console.log(this.getMovies().then(response=>this.setState({movies:response.data})))) }catch(err){}
+        } catch (err) {console.error('Error updating movie:',err)}
+    }
+
+    toggleEdit=(e)=>{
+        if (this.state.editMovie.id&&this.state.editMovie.name){
+            let selectedmovie=this.state.movies.find(movie=>movie._id===this.state.editMovie.id);
+            selectedmovie[this.state.name]=this.state.editMovie.t.value;
+            this.updateMovie(selectedmovie)
+        }
+        this.setState({editMovie:{id:e.target.id, name:e.target.name, t:e.target}})
+    }
+
+    onEditChange=(e)=>{
+        let movies = this.state.movies.slice(0);
+        let movie = movies.find(movie=>movie._id===this.state.editMovie.id);
+        movie[e.target.name]=e.target.value;
+        this.setState({movies:movies})
+    }
+
     createMovieList=()=>{
         let movielist=this.state.movies.map((movie,i)=>
             <li key='movie._id'>
-                <EditableInput editable={((this.state.editMovie.id==movie._id)&&(this.state.editMovie.name=='title'))} onClick={this.toggleEdit} name='title' index={i} id={movie._id} value={movie.title} style={{fontSize:'16px'}}/>-
-                <EditableInput editable={((this.state.editMovie.id==movie._id)&&(this.state.editMovie.name=='description'))} onClick={this.toggleEdit} name='description' index={i} id={movie._id} value={movie.description}/>
+                <EditableInput editable={((this.state.editMovie.id===movie._id)&&(this.state.editMovie.name==='title'))} onClick={this.toggleEdit} onChange={this.onEditChange} name='title' i={i} id={movie._id} value={movie.title} style={{fontSize:'16px'}}/>-
+                <EditableInput editable={((this.state.editMovie.id===movie._id)&&(this.state.editMovie.name==='description'))} onClick={this.toggleEdit} onChange={this.onEditChange} name='description' i={i} id={movie._id} value={movie.description}/>
                 <button id={movie._id} onClick={this.deleteMovie}>X</button>
             </li>
         )
         return movielist
     }
+
+    logState=()=>{console.log(this.state)}
     render(){
         return(
             <div>
                 <CreateMovie lift={this.createMovie}/>
+ 
                 <Movies movies={this.createMovieList()}/>
             </div>
         )
