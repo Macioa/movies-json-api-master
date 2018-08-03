@@ -1,12 +1,13 @@
 import React, {Component} from 'react'
 import Movies from '../Presentational/Movies'
 import CreateMovie from '../Input/CreateMovie';
+import EditableInput from '../Input/EditableInput'
 import { create } from 'domain';
 
 class MovieContainer extends Component{
     constructor(props){
         super(props)
-        this.state={movies:[]}
+        this.state={movies:[], editIndex:null}
     }
 
     getMovies=async ()=>{
@@ -34,16 +35,24 @@ class MovieContainer extends Component{
             deletedmovie.then(this.getMovies().then(response=>this.setState({movies:response.data})))
         } catch (err) {console.error('Error deleting movie:',err)}     
     }
-
     componentDidMount(){
         this.getMovies().then(response=>this.setState({movies:response.data})).catch(err=>console.error(err));
+    }
+    createMovieList=()=>{
+        let movielist=this.state.movies.map((movie,i)=>
+            <li key='movie._id'>
+                <EditableInput name='title' id={movie._id} value={movie.title} style={{fontSize:'16px'}}/>-
+                <EditableInput name='description' id={movie._id} value={movie.description}/>
+                <button id={movie._id} onClick={this.deleteMovie}>X</button>
+            </li>
+        )
+        return movielist
     }
     render(){
         return(
             <div>
                 <CreateMovie lift={this.createMovie}/>
-                <Movies movies={this.state.movies} lift={this.deleteMovie}/>
-                
+                <Movies movies={this.createMovieList()}/>
             </div>
         )
     }
