@@ -1,12 +1,13 @@
 import React, {Component} from 'react'
 import Movies from '../Presentational/Movies'
 import CreateMovie from '../Input/CreateMovie';
+import EditableInput from '../Input/EditableInput'
 import { create } from 'domain';
 
 class MovieContainer extends Component{
     constructor(props){
         super(props)
-        this.state={movies:[]}
+        this.state={movies:[], editMovie:{id:null,name:null}}
     }
 
     getMovies=async ()=>{
@@ -38,12 +39,24 @@ class MovieContainer extends Component{
     componentDidMount(){
         this.getMovies().then(response=>this.setState({movies:response.data})).catch(err=>console.error(err));
     }
+
+    toggleEdit=(e)=>{this.setState({editMovie:{id:e.target.id, name:e.target.name}})}
+    
+    createMovieList=()=>{
+        let movielist=this.state.movies.map((movie,i)=>
+            <li key='movie._id'>
+                <EditableInput editable={((this.state.editMovie.id==movie._id)&&(this.state.editMovie.name=='title'))} onClick={this.toggleEdit} name='title' index={i} id={movie._id} value={movie.title} style={{fontSize:'16px'}}/>-
+                <EditableInput editable={((this.state.editMovie.id==movie._id)&&(this.state.editMovie.name=='description'))} onClick={this.toggleEdit} name='description' index={i} id={movie._id} value={movie.description}/>
+                <button id={movie._id} onClick={this.deleteMovie}>X</button>
+            </li>
+        )
+        return movielist
+    }
     render(){
         return(
             <div>
                 <CreateMovie lift={this.createMovie}/>
-                <Movies movies={this.state.movies} lift={this.deleteMovie}/>
-                
+                <Movies movies={this.createMovieList()}/>
             </div>
         )
     }
