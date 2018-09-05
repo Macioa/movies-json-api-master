@@ -20,6 +20,6 @@ const movieController = require('./controllers/movieController');
 app.use('/api/v1/movies', movieController);
 
 
-app.listen(9000, () => {
-  console.log('listening on port 9000');
+app.listen(PORT, () => {
+  console.log(`listening on port ${PORT}`);
 });
