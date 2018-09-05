@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 
 // food is the name of our database
 // that is automatically created
-mongoose.connect('mongodb://localhost/moviesOne');
+const dburl = process.env.DBURL|'mongodb://localhost/moviesOne'
+mongoose.connect(dburl);
 
 mongoose.connection.on('connected', () => {
   console.log('Mongoose is connected')

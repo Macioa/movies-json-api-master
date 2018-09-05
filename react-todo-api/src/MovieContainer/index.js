@@ -7,11 +7,11 @@ import { create } from 'domain';
 class MovieContainer extends Component{
     constructor(props){
         super(props)
-        this.state={movies:[], editMovie:{id:null,name:null,i:null}, lastMovieId:null}
+        this.state={movies:[], editMovie:{id:null,name:null,i:null}, lastMovieId:null, server:process.env.SERVER|'http://localhost:9000'}
     }
 
     getMovies=async ()=>{
-        const movies = await fetch('http://localhost:9000/api/v1/movies').catch(err=>console.error('Error getting movielist:',err));
+        const movies = await fetch(`${this.state.server}/api/v1/movies`).catch(err=>console.error('Error getting movielist:',err));
         const moviesjson = await movies.json();
         return moviesjson;
     }
